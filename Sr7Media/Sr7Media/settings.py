@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'Sr7Media.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'sr7_media'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'Sr7sr7'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+        'NAME': 'sr7_media',
+        'USER':'root',
+        'PASSWORD':'Sr7sr7',
+        'HOST':'localhost',
+        'PORT':'3306',
     }
 }
 

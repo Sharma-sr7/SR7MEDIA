@@ -1,1 +1,1 @@
-web: gunicorn Sr7Media.wsgi --log-file
+web: gunicorn Sr7Media.wsgi:application --bind 0.0.0.0:$PORT
