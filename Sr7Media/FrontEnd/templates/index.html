@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block  title %}
+    <title>Sr7Media - Home</title>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+    <div class="col-lg-3 position-fixed start-0 d-none d-lg-block">
+        <div class="row bg-transparent pt-4 card" style="height: 84vh;">
+            <div class="col d-flex align-items-center column-gap-3 px-3">
+                <div class="d-flex justify-content-center bg-light rounded-circle"
+                    style="width: 100px; height: 100px; overflow: hidden;">
+                    <img src="{{user_profile.profileimg.url}}" style="max-width: 100%; max-height: 100%;">
+                </div>
+                <h4><a class="text-decoration-none fw-bold text-dark"
+                        href="{% url 'profile_url' pk=user_profile %}">@{{user_profile.user}}</a></h4>
+            </div>
+            <div class="col pt-4 lh-lg pe-0">
+                <hr class="m-1">
+                <p class="mb-0"><a class="text-decoration-none text-dark d-block hover-effect px-3 fs-5"
+                        href="{% url 'upload_url' %}">Upload</a></p>
+                <hr class="m-1">
+                <p class="mb-0"><a class="text-decoration-none text-dark d-block hover-effect px-3 fs-5"
+                        href="{% url 'profile_url' pk=user_profile %}">Profile</a></p>
+                <hr class="m-1">
+                <p class="mb-0"><a class="text-decoration-none text-dark d-block hover-effect px-3 fs-5"
+                        href="{% url 'update_url' %}">Profile Settings</a></p>
+                <hr class="m-1">
+                <p class="mb-0"><a class="text-decoration-none text-dark d-block hover-effect px-3 fs-5"
+                        href="{% url 'logout_url' %}">Logout</a></p>
+                <hr class="m-1">
+            </div>
+            <div class="d-flex justify-content-center" style="padding-top: 40%;">
+                <p><a class="text-decoration-none text-secondary" href="{% url 'privacy_url' %}">Privacy policy</a></p>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-12 col-md-12 col-lg-5 card p-0">
+        {% if posts %}
+        {% for post in posts reversed %}
+        <div class="container rounded p-0">
+            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 w-100">
+                <div class="d-flex align-items-center">
+                    <div class="d-flex justify-content-center align-items-center rounded-circle bg-light"
+                        style="width: 40px;height: 40px; overflow: hidden;">
+                        <a class="text-decoration-none" href="{{post.user_image.url}}">
+                            <img class="img-fluid" src="{{post.user_image.url}}"
+                                style="max-width: 100%; max-height: 100%;">
+                        </a>
+                    </div>
+
+                    <span class="ps-2"><a class="text-decoration-none text-dark fw-bold"
+                            href="{% url 'profile_url' pk=post.user %}">{{post.user}}</a></span>
+                </div>
+
+            </div>
+            <div class="d-flex justify-content-center bg-dark" style="width: 100%; height: 250px; overflow: hidden;">
+                <img class="img-fluid" style="max-width: 100%; max-height: 100%;" src="{{post.image.url}}">
+
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 w-100 ">
+                <div class="d-flex justify-content-start column-gap-3">
+                    <div class="d-flex align-items-center">
+                        <a href="{% url 'like_url' %}?post_id={{ post.id }}"
+                            onclick="toggleLike(event, '{{ post.id }}')">
+                            <i id="like-icon-{{ post.id }}" class="fa-heart fs-4 
+                                {% if post.is_liked_by_user %} fa-solid text-danger 
+                                {% else %} fa-regular text-dark {% endif %}"></i>
+                        </a>
+                        <span class="ps-1" id="like-count-{{ post.id }}">
+                            {% if post.like_count == 0 %}
+                            No Likes
+                            {% elif post.like_count == 1 %}
+                            1 Like
+                            {% else %}
+                            {{ post.like_count }} Likes
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a href="javascript:void(0)" onclick="showComments('{{ post.id }}')">
+                            <i class="fa-regular fa-comment text-dark fa-lg fs-4"></i>
+                        </a>
+                        <span class="ps-1" id="comment-count-{{ post.id }}">
+                            {% if post.comment_count == 0 %}
+                            No Comments
+                            {% elif post.comment_count == 1 %}
+                            1 Comment
+                            {% else %}
+                            {{ post.comment_count }} Comments
+                            {% endif %}
+                        </span>
+
+                    </div>
+                </div>
+
+
+                <a href="{{post.image.url}}" download><i class="fa-solid fa-download text-dark"></i></a>
+            </div>
+            <div class="bg-light px-3 pt-2 "><a class="text-decoration-none text-dark fw-bold"
+                    href="{% url 'profile_url' pk=post.user %}">{{post.user}}</a> {{post.caption}}
+                <p class="py-2"><span class="text-secondary">{{post.created_at | timesince}} ago</span></p>
+            </div>
+
+
+        </div>
+        {% endfor %}
+        <div class="modal" tabindex="-1" id="comment-modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Comments</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="comment-list">
+
+                    </div>
+                    <div class="p-2">
+                        <form id="comment-form" onsubmit="submitComment(event)">
+                            <textarea id="comment-text" class="form-control mb-3"
+                                placeholder="Write a comment..."></textarea>
+                            <button type="submit" class="btn btn-primary mt-2">Submit Comment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="d-flex justify-content-center align-items-center bg-transparent" style="height: 83vh;">
+            <p class="fs-4">Follow accounts to see posts.</p>
+        </div>
+        
+        {% endif %}
+
+    </div>
+    <div class="col-lg-3 d-none d-lg-block position-fixed end-0 ">
+        <div class="container bg-transparent overflow-y-auto card  p-2" style="height: 84vh; z-index: 1;">
+            <div>
+                <h1>Suggestions</h1>
+            </div>
+            <hr>
+            {% for suggestion in suggestions_username_profile_list %}
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="d-flex justify-content-center bg-light rounded-circle"
+                        style="width: 40px; height: 40px; overflow: hidden;">
+                        <img class="rounded-circle" src="{{suggestion.profileimg.url}}"
+                            style="max-width: 100%; max-height: 100%;">
+                    </div>
+                    <div class="d-flex flex-column ps-2">
+                        <span class="fs-6">{{suggestion.user}}</span>
+                        <span style="font-size: 12px;" class="text-secontary">{{suggestion.bio|truncatechars:20}}</span>
+                    </div>
+
+                </div>
+                <a href="{% url 'profile_url' pk=suggestion.user %}"><button class="btn btn-outline-dark">View
+                        Profile</button></a>
+
+
+            </div>
+            <hr>
+            {% endfor %}
+
+
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
