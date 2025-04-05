@@ -79,14 +79,15 @@ WSGI_APPLICATION = 'Sr7Media.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'mysql.connector.django',
         'NAME': 'sr7_media',
-        'USER':'root',
-        'PASSWORD':'Sr7sr7',
-        'HOST':'localhost',
-        'PORT':'3306',
+        'USER': 'root',
+        'PASSWORD': 'Sr7sr7',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
+
 
 
 # Password validation
