@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block  title %}
+    <title>Sr7Media - Profile</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-6 my-2">
+            <div class="d-flex justify-content-center h-100 align-items-center">
+                <div class="d-flex justify-content-center align-items-center bg-light rounded-circle"
+                    style="width: 160px; height: 160px; overflow: hidden;">
+                    <a href="{{other_user_profile.profileimg.url}}">
+                        <img src="{{other_user_profile.profileimg.url}}" style="max-width: 100%; max-height: 100%;">
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-12 col-md-6 mt-2">
+
+            <div class="d-flex column-gap-3 mb-4">
+                <h4>@{{other_user_profile.user.username}}</h4>
+            </div>
+            <form action="{% url 'follow_url' %}" method="POST">
+                {% csrf_token %}
+                <div class="d-flex column-gap-3 mt-4 row mb-3">
+                    <div class="col-12 d-flex column-gap-3">
+                        {% if user_posts_length == 0 %}
+                        <p><span class="fw-bold "></span> No Posts</p>
+                        {% elif user_posts_length == 1 %}
+                        <p><span class="fw-bold ">{{user_posts_length}} </span> Post</p>
+                        {% else %}
+                        <p><span class="fw-bold ">{{user_posts_length}} </span> Posts</p>
+                        {% endif %}
+                        {% if user_followers == 0 or user_followers == 1 %}
+                        <p><span class="fw-bold">{{user_followers}}</span> follower</p>
+                        {% else %}
+                        <p><span class="fw-bold">{{user_followers}}</span> followers</p>
+                        {% endif %}
+                        <p><span class="fw-bold">{{user_following}}</span> following</p>
+                        <input type="hidden" value="{{user_profile.user.username}}" name="follower">
+                        <input type="hidden" value="{{other_user_profile.user.username}}" name="user">
+                    </div>
+                    <div class="col-12 col-md-7">
+                        <p>{{other_user_profile.bio}}</p>
+                    </div>
+                    <div class="col-12">
+                        {% if other_user_profile.user.username == user_profile.user.username %}
+                        <a class="btn btn-dark fw-bold" style="width: 250px;" href="{% url 'update_url' %}">Edit
+                            Profile</a>
+                        {% else %}
+                        <input class="btn btn-dark fw-bold" type="submit" name="" id="" value="{{button_text}}">
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+
+
+
+        </div>
+    </div>
+    {% if user_posts %}
+    {% if user_profile.user == other_user_profile.user %}
+    <div class="row">
+        <h1>Posts</h1>
+        {% for post in user_posts reversed %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="d-flex justify-content-center align-items-center border bg-light mt-4"
+                style="width: 350px; height: 320px; overflow: hidden;">
+                <a href="{% url 'userposts_url' pk=user_profile %}">
+                    <img class="" src="{{post.image.url}}" style="max-width: 100%; max-height: 100%;">
+                </a>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="row">
+        <h1>Posts</h1>
+        {% for post in user_posts reversed %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="d-flex justify-content-center align-items-center border bg-light mt-4"
+                style="width: 350px; height: 320px; overflow: hidden;">
+                <a href="{% url 'userposts_url' pk=other_user_profile %}">
+                    <img class="" src="{{post.image.url}}" style="max-width: 100%; max-height: 100%;">
+                </a>
+
+            </div>
+            
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="row">
+        <h1>Posts</h1>
+        <div class="text-center mt-5">
+            <h5>No Posts</h5>
+        </div>
+        
+    </div>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}
