@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'Sr7Media.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sr7_media',
         'USER': 'root',
         'PASSWORD': 'Sr7sr7',
