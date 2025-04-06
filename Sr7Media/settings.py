@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'Sr7Media.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sr7_media',
-        'USER': 'root',
-        'PASSWORD': 'Sr7sr7',
-        'HOST': 'localhost',
+        'NAME': 'SharmaSR7$sr7media',
+        'USER': 'SharmaSR7',
+        'PASSWORD': 'MySqlSr7@123',
+        'HOST': 'SharmaSR7.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
 }
